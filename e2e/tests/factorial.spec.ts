@@ -1,9 +1,12 @@
 import { test, expect } from '@playwright/test';
+import { FactorialPage } from './factorial.pom';
 
 test('factorial of 7 is 5040', async ({ page }) => {
-  await page.goto('/');
-  await page.getByPlaceholder('Enter an integer').click();
-  await page.getByPlaceholder('Enter an integer').fill('7');
-  await page.getByRole('button', { name: 'Calculate!' }).click();
-  await expect(page.locator('#resultDiv')).toContainText('The factorial of 7 is: 5040');
+  const factorialPage = new FactorialPage(page, 7, 5040);
+
+  await Promise.all([
+    factorialPage.goto(),
+    factorialPage.calculateFactorial(),
+    factorialPage.verifyFactorialResult(),
+  ]);
 });
