@@ -1,0 +1,23 @@
+services:
+  app:
+    build:
+      context: ./assessment
+    ports:
+      - 6464:6464
+    volumes:
+      - ./assessment:/app/    
+    command: python qa_interview.py
+  e2e:
+      build:
+        context: ./e2e      
+      volumes:
+        - ./e2e:/e2e/
+      ports:
+        - 9323:9323
+      depends_on:
+        app:
+          condition: service_started          
+      environment:
+        NODE_ENV: production
+        BASE_URL: http://app:6464
+      command: npm test
